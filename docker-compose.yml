@@ -1,10 +1,7 @@
 services:
   prediction-api:
-    image: fatimawaseemdevops/linear-regression-api:latest
-
+    image: fatimawaseemdevops/linear-regression-api:v1
     container_name: linear-regression-api
-
     ports:
       - "5000:5000"
-
     restart: unless-stopped
