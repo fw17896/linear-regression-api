@@ -1,3 +1,4 @@
+```groovy
 pipeline {
     agent any
 
@@ -16,22 +17,28 @@ pipeline {
             steps {
                 sh '''
                     set -e
-                    cd "$WORKSPACE"
 
                     echo "Pulling Docker image..."
                     docker compose pull
 
-                    echo "Starting API..."
+                    echo "Removing any existing API container..."
+                    docker rm -f linear-regression-api || true
+
+                    echo "Starting API using Docker Compose..."
                     docker compose up -d
 
-                    echo "Waiting for API..."
+                    echo "Waiting for API to start..."
                     sleep 5
 
                     echo "Testing prediction endpoint..."
                     curl --fail --silent --show-error \
                       "http://localhost:5000/predict?x1=2&x2=3&x3=1"
+
+                    echo ""
+                    echo "API deployment successful!"
                 '''
             }
         }
     }
 }
+```
