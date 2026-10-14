@@ -12,17 +12,25 @@ pipeline {
             }
         }
 
-        stage('Deploy Prediction API') {
+        stage('Deploy Linear Regression API') {
             steps {
-                sh 'docker compose pull'
-                sh 'docker compose up -d'
-            }
-        }
+                sh '''
+                    set -e
+                    cd "$WORKSPACE"
 
-        stage('Verify Deployment') {
-            steps {
-                sh 'docker compose ps'
-                sh 'docker inspect -f "{{.State.Running}}" linear-regression-api'
+                    echo "Pulling Docker image..."
+                    docker compose pull
+
+                    echo "Starting API..."
+                    docker compose up -d
+
+                    echo "Waiting for API..."
+                    sleep 5
+
+                    echo "Testing prediction endpoint..."
+                    curl --fail --silent --show-error \
+                      "http://localhost:5000/predict?x1=2&x2=3&x3=1"
+                '''
             }
         }
     }
