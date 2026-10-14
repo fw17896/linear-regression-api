@@ -1,6 +1,6 @@
 services:
   prediction-api:
-    image: YOUR_DOCKERHUB_USERNAME/linear-regression-api:latest
+    image: fatimawaseemdevops/linear-regression-api:latest
 
     container_name: linear-regression-api
 
